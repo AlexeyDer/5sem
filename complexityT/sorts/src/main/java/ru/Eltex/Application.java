@@ -1,5 +1,7 @@
 package ru.Eltex;
 
+import java.util.Scanner;
+
 public class Application {
     public static int M = 0;
     public static int C = 0;
@@ -32,7 +34,7 @@ public class Application {
                     min = j;
                 }
             }
-            ++C;
+//            ++C;
             if (a[min] < a[i]) {
                 int t = a[i];
                 a[i] = a[min];
@@ -63,32 +65,51 @@ public class Application {
 
                 while (i <= h1 && j <= h2) {
                     ++C;
-                    ++M;
-                    if (arr[i] <= arr[j])
+                    if (arr[i] >= arr[j])  {
+                        if (k != i) {
+                            ++M;
+                        }
+                        System.out.print(arr[i] + " ");
                         temp[k++] = arr[i++];
-                    else
+
+                    }
+                    else {
+                        if (k != j) {
+                            ++M;
+                        }
+                        System.out.print(arr[j] + " ");
                         temp[k++] = arr[j++];
+
+                    }
                 }
 
+
                 while (i <= h1) {
+                    System.out.print(arr[i] + " ");
                     temp[k++] = arr[i++];
-                    ++M;
+                    if (k != i) {
+                        ++M;
+                    }
                 }
                 while (j <= h2) {
+                    System.out.print(arr[j] + " ");
                     temp[k++] = arr[j++];
-                    ++M;
+                    if (k != j) {
+                        ++M;
+                    }
                 }
 
                 l1 = h2 + 1;
             }
+            System.out.println();
 
             for (int i = l1; k < n; i++) {
                 temp[k++] = arr[i];
-                ++M;
             }
 
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++) {
                 arr[i] = temp[i];
+            }
 
         }
 
@@ -101,63 +122,76 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        int n = 64;
+        int n;
+        Scanner sc = new Scanner(System.in);
+        n = sc.nextInt();
         int[] a = new int[n];
+//
+//        System.out.println("-------Bubble Sort-------");
+//        System.out.println("Массив до сортировки: ");
+//
+//        for (int i = 0; i < n; i++) {
+////            a[i] = (int) (Math.random() * 10) + 1;
+//            a[i] = 10 - i;
+//            System.out.print(a[i] + " ");
+//        }
+//        System.out.println();
+//        System.out.println("Массив после сортировки: ");
+//
+//        bubbleSort(a);
+//
+//        print(a, n);
+//        System.out.println("\nКоличество перестановок: " + M);
+//        System.out.println("Количество сравнений: " + C);
+//        System.out.println("-----------------------");
+//
+//        M = 0;
+//        C = 0;
+//
+//        System.out.println("-------Select Sort-------");
+//        System.out.println("Массив до сортировки: ");
+//        for (int i = 0; i < n; i++) {
+////            a[i] = (int) (Math.random() * 10) + 1;
+//            a[i] = 10 - i;
+//            System.out.print(a[i] + " ");
+//        }
+//        System.out.println();
+//        System.out.println("Массив после сортировки: ");
+//
+//        selectSort(a);
+//
+//        print(a, n);
+//        System.out.println("\nКоличество перестановок: " + M);
+//        System.out.println("Количество сравнений: " + C);
+//        System.out.println("-----------------------");
+//
+//        M = 0;
+//        C = 0;
 
-        System.out.println("-------Bubble Sort-------");
-        System.out.println("Массив до сортировки: ");
-        for (int i = 0; i < n; i++) {
-            a[i] = (int) (Math.random() * 10) + 1;
-            System.out.print(a[i] + " ");
-        }
-        System.out.println();
-        System.out.println("Массив после сортировки: ");
 
-        bubbleSort(a);
-
-        print(a, n);
-        System.out.println("\nКоличество перестановок: " + M);
-        System.out.println("Количество сравнений: " + C);
-        System.out.println("-----------------------");
-
-        M = 0;
-        C = 0;
-
-        System.out.println("-------Select Sort-------");
-        System.out.println("Массив до сортировки: ");
-        for (int i = 0; i < n; i++) {
-            a[i] = (int) (Math.random() * 10) + 1;
-            System.out.print(a[i] + " ");
-        }
-        System.out.println();
-        System.out.println("Массив после сортировки: ");
-
-        selectSort(a);
-
-        print(a, n);
-        System.out.println("\nКоличество перестановок: " + M);
-        System.out.println("Количество сравнений: " + C);
-        System.out.println("-----------------------");
-
-        M = 0;
-        C = 0;
 
         System.out.println("-------Merge Sort-------");
-        a = new int[n];
 
-        System.out.println("Массив до сортировки: ");
-        for (int i = 0; i < n; i++) {
-            a[i] = (int) (Math.random() * 10) + 1;
-            System.out.print(a[i] + " ");
+
+        if ((n & -n) != n) {
+            System.out.println("Число n не является степенью двойки!");
+        } else {
+
+            System.out.println("Массив до сортировки: ");
+            for (int i = 0; i < n; i++) {
+//            a[i] = (int) (Math.random() * 10) + 1;
+                a[i] = sc.nextInt();
+                System.out.print(a[i] + " ");
+            }
+            System.out.println();
+            System.out.println("Массив после сортировки: ");
+
+            mergeSort(a);
+
+            print(a, n);
+            System.out.println("\nКоличество перестановок: " + M);
+            System.out.println("Количество сравнений: " + C);
+            System.out.println("-----------------------");
         }
-        System.out.println();
-        System.out.println("Массив после сортировки: ");
-
-        mergeSort(a);
-
-        print(a, n);
-        System.out.println("\nКоличество перестановок: " + M);
-        System.out.println("Количество сравнений: " + C);
-        System.out.println("-----------------------");
     }
 }
