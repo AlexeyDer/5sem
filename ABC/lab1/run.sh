@@ -19,9 +19,9 @@ echo -n -e ' * Доступно - '; lsblk /dev/sda | grep "sda4" | awk '{ print
 echo -n -e ' * Смонтировано в корневую директорию / - '; df -h | grep '/$' | awk '{print $1}'
 echo -n -e ' * SWAP Всего - '; free -h | grep "Swap" | awk '{ print $2 }'
 echo -n -e ' * SWAP Доступно - '; free -h | grep "Swap" | awk '{ print $4 }'
-echo 'Сетевые интерфейсы::'
-echo ' * Количество сетевых интерфейсов - :'
-echo "Имя              ipv4                  mac"
+echo 'Сетевые интерфейсы:'
+echo -n -e ' * Количество сетевых интерфейсов - '; ip a |awk '/state/' | wc -l
+echo "Имя              ipv4                  mac                 speed"
 info=$(ifconfig)
 names=$(echo "$info" | awk '$1~/[^:]*?:/ {print $1}')
 temp=$(mktemp)
@@ -30,7 +30,8 @@ for NAME in $names; do
     intInfo=$(ifconfig $NAME)
     IP=$(echo "$intInfo" | sed -n 's|inet \([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\).*$|\1|p')
     MAC=$(echo "$intInfo" | sed -n -E 's|ether ([[:alnum:]]{2}:[[:alnum:]]{2}:[[:alnum:]]{2}:[[:alnum:]]{2}:[[:alnum:]]{2}:[[:alnum:]]{2}).*$|\1|p')
-    echo "$NAME, $IP, $MAC" >> $temp
+    SPEED=$(sudo ethtool $NAME | grep "Speed:" | cut -d: -f2 )
+    echo "$NAME, $IP, $MAC", $SPEED >> $temp
 done
 column -t -s, $temp
 rm $temp
