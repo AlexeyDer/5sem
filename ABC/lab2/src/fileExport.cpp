@@ -3,7 +3,7 @@
 void fileExport(const string &dataType, const string &Task, const string &OpType, int LNum, int InsCount, float AvTime,
                 float AbsError,
                 float RelError, double TaskPerf) {
-    string PModel = "Intel Core i7 8750H (x86)";
+    string PModel = "AMD A9-9420 RADEON R5 (x86)";
     string Opt = "CFLAGS=\"-O1\"";
     ofstream outCSV;
     string format = ".csv";

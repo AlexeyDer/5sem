@@ -21,11 +21,11 @@ int getNumberTest() {
 
 int getTestType() {
     int testType;
-    cout << "\nВыберите задачу:";
-    cout << "\n1. Нахождение синуса";
-    cout << "\n2. Нахождение логарифма";
-    cout << "\n3. Нахождение корня";
-    cout << "\n>";
+    cout << "\nВыберите задачу:" << endl;
+    cout << "1. Нахождение синуса" << endl;
+    cout << "2. Нахождение логарифма" << endl;
+    cout << "3. Нахождение корня" << endl;
+
     cin >> testType;
     if (testType == 1) {
         return 1;
@@ -177,10 +177,6 @@ int main() {
     srand(static_cast <unsigned> (time(nullptr))); 
 
     int menuInput = 0;
-
-    // cout << getSin(1) << endl
-    //     << getSin((float)1.0) << endl
-    //     << getSin((double)1.0);
 
     do {
         cout << "\n\n1. Протестировать значения типа int";
