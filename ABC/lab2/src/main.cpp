@@ -56,8 +56,11 @@ void startBenchmark(int benchmarkType) {
     
     float testTimeResult[numberTest];
     double resultArr[size];
+    string name;
 
      if (testType == 1) { // sin
+            name = "sin";
+
             for (int j = 0; j < numberTest; j++) {
                 int runTime = 0;
                 
@@ -94,14 +97,12 @@ void startBenchmark(int benchmarkType) {
                     return;
                 }
                
-               
-
                 testTimeResult[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
-//                printf("\n[%d] %f сек", j + 1, testTimeResult[j]);
                 totalTime += testTimeResult[j];
             }
 
         } else if (testType == 2) { // log
+            name = "log";
 
             for (int j = 0; j < numberTest; j++) {
                 int runTime = 0;
@@ -113,7 +114,7 @@ void startBenchmark(int benchmarkType) {
 
                     runTime = clock();
                     for (int i = 0; i < size; i++) {
-                        resultArr[i] = getSin(randomIntArr[i]);
+                        resultArr[i] = getLog(randomIntArr[i]);
                     }
                 } else if (benchmarkType == 2) { // float
                     for (int k = 0; k < size; k++) { 
@@ -122,7 +123,7 @@ void startBenchmark(int benchmarkType) {
                     
                     runTime = clock();
                     for (int i = 0; i < size; i++) {
-                        resultArr[i] = getSin(randomFloatArr[i]);
+                        resultArr[i] = getLog(randomFloatArr[i]);
                     }
 
                 } else if (benchmarkType == 3) { // double
@@ -132,7 +133,7 @@ void startBenchmark(int benchmarkType) {
 
                     runTime = clock();
                     for (int i = 0; i < size; i++) {
-                        resultArr[i] = getSin(randomDoubleArr[i]);
+                        resultArr[i] = getLog(randomDoubleArr[i]);
                     }
                 } else {
                     cout << "\nОшибка ввода\n";
@@ -140,14 +141,14 @@ void startBenchmark(int benchmarkType) {
                 }
                
                 testTimeResult[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
-//                printf("\n[%d] %f сек", j + 1, testTimeResult[j]);
                 totalTime += testTimeResult[j];
             }
 
         } else if (testType == 3) { // sqrt
+            name = "sqrt";
 
             for (int j = 0; j < numberTest; j++) {
-                  int runTime = 0;
+                int runTime = 0;
                 
                 if (benchmarkType == 1) { // int
                     for (int k = 0; k < size; k++) { 
@@ -156,7 +157,7 @@ void startBenchmark(int benchmarkType) {
 
                     runTime = clock();
                     for (int i = 0; i < size; i++) {
-                        resultArr[i] = getSin(randomIntArr[i]);
+                        resultArr[i] = getSqrt(randomIntArr[i]);
                     }
                 } else if (benchmarkType == 2) { // float
                     for (int k = 0; k < size; k++) { 
@@ -165,7 +166,7 @@ void startBenchmark(int benchmarkType) {
                     
                     runTime = clock();
                     for (int i = 0; i < size; i++) {
-                        resultArr[i] = getSin(randomFloatArr[i]);
+                        resultArr[i] = getSqrt(randomFloatArr[i]);
                     }
 
                 } else if (benchmarkType == 3) { // double
@@ -175,44 +176,36 @@ void startBenchmark(int benchmarkType) {
 
                     runTime = clock();
                     for (int i = 0; i < size; i++) {
-                        resultArr[i] = getSin(randomDoubleArr[i]);
+                        resultArr[i] = getSqrt(randomDoubleArr[i]);
                     }
                 } else {
                     cout << "\nОшибка ввода\n";
                     return;
-                }
-               
+                }   
                 testTimeResult[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
-//                printf("\n[%d] %f сек", j + 1, testTimeResult[j]);
                 totalTime += testTimeResult[j];
             }
 
         } else {
             return;
         }
-
         averageTime = totalTime / numberTest;
         absoluteInaccuracy = abs(testTimeResult[0] - averageTime);
         relativeInaccuracy = (absoluteInaccuracy / averageTime) * 0.1;
         performance = getTaskPerformance(1, totalTime);
 
         if (benchmarkType == 1) { // int
-            fileExport("int", "sin", "int, double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
+            fileExport("int", name, "int, double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
         } else 
             if (benchmarkType == 2) { // float
-                fileExport("float", "sin", "float, double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
+                fileExport("float", name, "float, double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
             } else 
                 if (benchmarkType == 3) { // double
-                    fileExport("double", "sin", "double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
+                    fileExport("double", name, "double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
                 } else {
                     cout << "\nОшибка ввода\n";
                     return;
-                }
-            //            printf("\nОбщее время: %f сек", totalTime);
-            //            printf("\nСреднее время: %f сек", averageTime);
-            //            printf("\nАбсолютная погрешность: %f сек", absoluteInaccuracy);
-            //            printf("\nОтносительная погрешность: %f %%", relativeInaccuracy);       
-    
+                }     
 }
 
 int main() {

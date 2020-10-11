@@ -4,7 +4,7 @@ void fileExport(const string &dataType, const string &Task, const string &OpType
                 float AbsError,
                 float RelError, double TaskPerf) {
     string PModel = "AMD A9-9420 RADEON R5 (x86)";
-    string Opt = "CFLAGS=\"-O1\"";
+    string Opt = "CFLAGS=\"-O\"";
     ofstream outCSV;
     string format = ".csv";
     string fileName = dataType + "-" + Task + "-" + to_string(AvTime) + "-" + to_string(TaskPerf) + format;
