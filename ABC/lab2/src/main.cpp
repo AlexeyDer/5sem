@@ -56,10 +56,31 @@ void startBenchmark(int benchmarkType) {
     
     float testTimeResult[numberTest];
     double resultArr[size];
+    int insCount = 0;
     string name;
+     
+    if (numberTest == 0) {
+        return;
+    }
 
      if (testType == 1) { // sin
             name = "sin";
+            string fileName;
+            string dataType;
+
+            if (benchmarkType == 1) {
+                fileName = fileCreate("int", name);
+                dataType = "int";
+            }
+            else if (benchmarkType == 2) {
+                fileName = fileCreate("float", name);
+                dataType = "float";
+            } else if (benchmarkType == 3) {
+                fileName = fileCreate("double", name);
+                dataType = "double";
+            } else {
+                return;
+            }
 
             for (int j = 0; j < numberTest; j++) {
                 int runTime = 0;
@@ -99,11 +120,37 @@ void startBenchmark(int benchmarkType) {
                
                 testTimeResult[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
                 totalTime += testTimeResult[j];
+                insCount++;
+
+                averageTime = totalTime / insCount;
+                absoluteInaccuracy = abs(testTimeResult[0] - averageTime);
+                relativeInaccuracy = (absoluteInaccuracy / averageTime) * 0.1;
+                performance = getTaskPerformance(1, totalTime);
+
+                fileExport(fileName, dataType, name, dataType, numberTest, insCount, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
+
             }
 
         } else if (testType == 2) { // log
             name = "log";
 
+            string fileName;
+            string dataType;
+
+            if (benchmarkType == 1) {
+                fileName = fileCreate("int", name);
+                dataType = "int";
+            }
+            else if (benchmarkType == 2) {
+                fileName = fileCreate("float", name);
+                dataType = "float";
+            } else if (benchmarkType == 3) {
+                fileName = fileCreate("double", name);
+                dataType = "double";
+            } else {
+                return;
+            }
+            
             for (int j = 0; j < numberTest; j++) {
                 int runTime = 0;
                 
@@ -139,13 +186,37 @@ void startBenchmark(int benchmarkType) {
                     cout << "\nОшибка ввода\n";
                     return;
                 }
-               
+                insCount++;
                 testTimeResult[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
                 totalTime += testTimeResult[j];
-            }
 
+                averageTime = totalTime / insCount;
+                absoluteInaccuracy = abs(testTimeResult[0] - averageTime);
+                relativeInaccuracy = (absoluteInaccuracy / averageTime) * 0.1;
+                performance = getTaskPerformance(1, totalTime);
+
+                fileExport(fileName, dataType, name, dataType, numberTest, insCount, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
+
+            }
         } else if (testType == 3) { // sqrt
             name = "sqrt";
+            string fileName;
+            string dataType;
+
+            if (benchmarkType == 1) {
+                fileName = fileCreate("int", name);
+                dataType = "int";
+            }
+            else if (benchmarkType == 2) {
+                fileName = fileCreate("float", name);
+                dataType = "float";
+            } else if (benchmarkType == 3) {
+                fileName = fileCreate("double", name);
+                dataType = "double";
+            } else {
+                return;
+            }
+
 
             for (int j = 0; j < numberTest; j++) {
                 int runTime = 0;
@@ -182,30 +253,25 @@ void startBenchmark(int benchmarkType) {
                     cout << "\nОшибка ввода\n";
                     return;
                 }   
+
+
+                insCount++;
                 testTimeResult[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
                 totalTime += testTimeResult[j];
+
+                averageTime = totalTime / insCount;
+                absoluteInaccuracy = abs(testTimeResult[0] - averageTime);
+                relativeInaccuracy = (absoluteInaccuracy / averageTime) * 0.1;
+                performance = getTaskPerformance(1, totalTime);
+
+                fileExport(fileName, dataType, name, dataType, numberTest, insCount, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
             }
 
         } else {
             return;
         }
-        averageTime = totalTime / numberTest;
-        absoluteInaccuracy = abs(testTimeResult[0] - averageTime);
-        relativeInaccuracy = (absoluteInaccuracy / averageTime) * 0.1;
-        performance = getTaskPerformance(1, totalTime);
-
-        if (benchmarkType == 1) { // int
-            fileExport("int", name, "int, double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
-        } else 
-            if (benchmarkType == 2) { // float
-                fileExport("float", name, "float, double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
-            } else 
-                if (benchmarkType == 3) { // double
-                    fileExport("double", name, "double", numberTest, 1, averageTime, absoluteInaccuracy, relativeInaccuracy, performance);
-                } else {
-                    cout << "\nОшибка ввода\n";
-                    return;
-                }     
+        // cout << endl << averageTime << endl;
+        // cout << endl << performance << endl;
 }
 
 int main() {

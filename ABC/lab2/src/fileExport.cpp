@@ -1,20 +1,24 @@
 #include "fileExport.h"
 
-void fileExport(const string &dataType, const string &Task, const string &OpType, int LNum, int InsCount, float AvTime,
+string fileCreate(string dataType, const string &Task) {
+       const string &filename = dataType + "-" + Task + ".csv";
+       ofstream myFile(filename);
+       myFile << "PModel;" << "Task;" << "OpType;" << "Opt;"
+           << "LNum;" << "InsCount;" << "Timer;" << "AvTime (sec);" << "AbsError (sec);"
+           << "RelError (%);" << "TaskPerf;\n";
+
+       cout << "\n\nФайл " << filename << " успешно создан!";
+       return filename;
+}
+
+void fileExport(const string &fileName, const string &dataType, const string &Task, const string &OpType, int LNum, int InsCount, float AvTime,
                 float AbsError,
                 float RelError, double TaskPerf) {
     string PModel = "AMD A9-9420 RADEON R5 (x86)";
-    string Opt = "CFLAGS=\"-O\"";
-    ofstream outCSV;
-    string format = ".csv";
-    string fileName = dataType + "-" + Task + "-" + to_string(AvTime) + "-" + to_string(TaskPerf) + format;
-    outCSV.open(fileName);
-    outCSV << "PModel;" << "Task;" << "OpType;" << "Opt;"
-           << "LNum;" << "InsCount;" << "AvTime (sec);" << "AbsError (sec);"
-           << "RelError (%);" << "TaskPerf;" << "Type timer;";
-    outCSV << endl;
-    outCSV << PModel << ";" << Task << ";" << OpType << ";" << Opt << ";" << LNum << ";" << InsCount << ";" << AvTime
-           << ";" << AbsError << ";" << RelError << ";" << TaskPerf << ";" << "clock();";
+    string Opt = "-O1";
+       
+    fstream outCSV(fileName, ios_base::app);
+    outCSV << PModel << ";" << Task << ";" << OpType << ";" << Opt << ";" << LNum << ";" << InsCount << ";" <<"clock()" << ";" << AvTime
+           << ";" << AbsError << ";" << RelError << ";" << TaskPerf << ";\n";
     outCSV.close();
-    cout << "\n\nУспешно. Результаты бенчмарка в файле " << fileName << "";
 }
