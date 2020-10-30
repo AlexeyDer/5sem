@@ -3,7 +3,7 @@
 string fileCreate(string memoryType) {
        const string &filename = memoryType + ".csv";
        ofstream myFile(filename);
-       myFile << "MemoryType;" << "BlockSize;" << "ElementType;" << "BufferSize;"
+       myFile << "MemoryType;" << "BlockSize(Byte);" << "ElementType;" << "BufferSize;"
            << "LaunchNum;" << "Timer;" << "WriteTime;" << "AverageWriteTime;" << "WriteBandwidth;"
            << "AbsError(write);" << "RelError(write);" << "ReadTime;" << "AverageReadTime;"
            << "ReadBandwidth;" << "AbsError(read);" << "RelError(read);" << endl;

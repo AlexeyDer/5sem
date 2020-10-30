@@ -1,11 +1,11 @@
 CXX		  := g++
-CXX_FLAGS := -Wall -Wextra
+CXX_FLAGS := -Wall -Wextra -lrt
 
 BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS :=  –m RAM –b 1024 –l 10 
+ARGS :=  –m SSD –b 1024 –l 10 
 
 LIBRARIES	:=
 EXECUTABLE	:= main
@@ -17,15 +17,15 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-all: $(BIN)/$(EXECUTABLE)
-	$(BIN)/$(EXECUTABLE) $(ARGS)
+all: $(BIN)/$(EXECUTABLE) 
+	$(BIN)/$(EXECUTABLE) $(ARGS) 
 
 run: clean all
 	clear
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp 
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o  $@ $(LIBRARIES) -lrt
 
 clean:
 	-rm $(BIN)/*
