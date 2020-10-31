@@ -21,7 +21,7 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
     int randomArray[BufferSize];
 
     blockSize /= 1e+6;
-    cout << fixed << setprecision(6) << blockSize;
+    // cout << fixed << setprecision(6) << blockSize;
     
     struct timespec mt1, mt2; 
     
@@ -49,7 +49,9 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
                 out << randomArray[i] << " ";
             }
             clock_gettime (CLOCK_REALTIME, &mt2);
+            out.close();
         }
+       
 
         writeTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000000));
         // cout << fixed << setprecision(9) << writeTime[j] << endl;
@@ -64,13 +66,15 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
         //-------read---------
         ifstream in("file.txt");
 
-        string line;
+        char ch;
         if (in.is_open()) {
             clock_gettime (CLOCK_REALTIME, &mt1);
-            while (getline(in, line)){
+            while (!in.eof()){
+                in >> ch;
             }
             clock_gettime (CLOCK_REALTIME, &mt2);
-        }    
+            in.close();
+        }  
          
 
         readTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000000));

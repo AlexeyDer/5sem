@@ -5,7 +5,7 @@ string fileCreate(string memoryType) {
        ofstream myFile(filename);
        myFile << "MemoryType;" << "BlockSize;" << "ElementType;" << "BufferSize;"
            << "LaunchNum;" << "Timer;" <<  "WriteTime;" << "AverageWriteTime;" << "WriteBandwidth;"
-           << "AbsError(write);" << "RelError(write);" << "ReadTime;" << "AverageReadTime;"
+           << "AbsError   (write);" << "RelError   (write);" << "ReadTime;" << "AverageReadTime;"
            << "ReadBandwidth;" << "AbsError(read);" << "RelError(read);" << endl;
        myFile.close();
        return filename;
@@ -25,7 +25,7 @@ void fileExport(const string &fileName, const string &memoryType, float blockSiz
        outCSV << memoryType << ";"
            << fixed << setprecision(6)  << blockSize << " Mb;"
            << ElementType << ";"
-           << BufferSize << " ?;"
+           << BufferSize << " Byte;"
            << LaunchNum << ";" << Timer << ";" 
            << fixed << setprecision(9) <<  WriteTime << " Sec;" 
            << fixed << setprecision(9) << AvWriteTime << " Sec;" 
@@ -36,7 +36,7 @@ void fileExport(const string &fileName, const string &memoryType, float blockSiz
            << fixed << setprecision(9) << AvReadTime << " Sec;"
            << fixed << setprecision(9) << ReadBandwidth << " Sec;"
            << fixed << setprecision(9) << AbsErrorRead << " Sec ;"
-           << fixed << setprecision(9) <<  RelErrorRead << "Sec ;" << endl; 
+           << fixed << setprecision(9) <<  RelErrorRead << " Sec ;" << endl; 
 
     outCSV.close();
 }
