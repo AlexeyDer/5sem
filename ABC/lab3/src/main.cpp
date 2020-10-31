@@ -3,10 +3,10 @@
 #include "fileExport.h"
 #include <fstream>
 #include <time.h>
+#include <math.h>
+
 
 using namespace std;
-
-#define BILLION  1000000000L;
 
 int getRandomInt() {
     int min = 0;
@@ -16,15 +16,14 @@ int getRandomInt() {
     return static_cast<int>(rand() * randomInt * (max - min + 1) + min);
 }
 
-void performanceOfTheMemorySubsystem(string memoryType, string ElementType, int blockSize, int testsCount) {
+void performanceOfTheMemorySubsystem(string memoryType, string ElementType, float blockSize, int testsCount) {
     int BufferSize = blockSize / sizeof(int);
     int randomArray[BufferSize];
+
+    blockSize /= 1e+6;
+    cout << fixed << setprecision(6) << blockSize;
     
     struct timespec mt1, mt2; 
-    long int tt;      
-   
-    // int blockData[BufferSize];
-
     
     float totalWriteTime = 0, totalReadTime = 0;
     float writeTime[testsCount];
@@ -51,13 +50,14 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, int 
             }
             clock_gettime (CLOCK_REALTIME, &mt2);
         }
-        // tt= 1000000000*();
-        writeTime[j] = (1000000000 * (mt2.tv_sec - mt1.tv_sec ) + (mt2.tv_nsec - mt1.tv_nsec)) / CLOCKS_PER_SEC; //
-        cout << writeTime[j] << endl;
+
+        writeTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000000));
+        // cout << fixed << setprecision(9) << writeTime[j] << endl;
         // printf( "%lf\n", writeTime[j]);
         totalWriteTime += writeTime[j];
         float averageWriteTime = totalWriteTime / (j + 1);
-        float writeBandwidth = ((blockSize / averageWriteTime) * 1000000) / 1048576;
+        float writeBandwidth = ((blockSize / averageWriteTime));
+         // * 1000000;    
         float AbsErrorWrite = abs(writeTime[0] - averageWriteTime);
         float RelErrorWrite = (AbsErrorWrite / averageWriteTime) * 0.1;
 
@@ -65,23 +65,23 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, int 
         ifstream in("file.txt");
 
         string line;
- 
-        runTime = 0;
         if (in.is_open()) {
-            runTime = clock();
+            clock_gettime (CLOCK_REALTIME, &mt1);
             while (getline(in, line)){
             }
+            clock_gettime (CLOCK_REALTIME, &mt2);
         }    
          
 
-        readTime[j] = ((float) clock() - (float) runTime) / CLOCKS_PER_SEC;
+        readTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000000));
         totalReadTime += readTime[j];
         float averageReadTime = totalReadTime / (j + 1);
-        float readBandwidth = (blockSize / averageReadTime) * 1000000;
+        float readBandwidth = (blockSize / averageReadTime);
+        // * 1000000;
         float AbsErrorRead = abs(readTime[0] - averageReadTime);
         float RelErrorRead = (AbsErrorRead / averageReadTime) * 0.1;
 
-        fileExport(filename, memoryType, blockSize,ElementType, BufferSize, j + 1, "clock()", writeTime[j], averageWriteTime, writeBandwidth,
+        fileExport(filename, memoryType, blockSize,ElementType, BufferSize, j + 1, "clock_gettime()", writeTime[j], averageWriteTime, writeBandwidth,
         AbsErrorWrite, RelErrorWrite, readTime[j], averageReadTime, readBandwidth, AbsErrorRead, RelErrorRead);
 
     }
@@ -94,7 +94,8 @@ int main(int argc, char* argv[]) {
     srand(static_cast <unsigned> (time(nullptr))); 
 
     string memoryType = argv[2], ElementType = "int";
-    int blockSize = stoi(argv[4]), testsCount = stoi(argv[6]);
+    float blockSize = stoi(argv[4]);
+    int testsCount = stoi(argv[6]);
 
     performanceOfTheMemorySubsystem(memoryType, ElementType, blockSize, testsCount);
 

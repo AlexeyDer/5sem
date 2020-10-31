@@ -5,9 +5,10 @@ using namespace std;
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 string fileCreate(string memoryType);
-void fileExport(const string &fileName, const string &memoryType, int blockSize,
+void fileExport(const string &fileName, const string &memoryType, float blockSize,
               const string &ElementType, int BufferSize, int LaunchNum, string Timer, float WriteTime, float AvWriteTime,
               float WriteBandwidth, 
               float AbsErrorWrite,float RelErrorWrite,
