@@ -21,8 +21,7 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
     int randomArray[BufferSize];
 
     blockSize /= 1e+6;
-    // cout << fixed << setprecision(6) << blockSize;
-    
+
     struct timespec mt1, mt2; 
     
     float totalWriteTime = 0, totalReadTime = 0;
@@ -58,7 +57,7 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
         // printf( "%lf\n", writeTime[j]);
         totalWriteTime += writeTime[j];
         float averageWriteTime = totalWriteTime / (j + 1);
-        float writeBandwidth = ((blockSize / averageWriteTime));
+        float writeBandwidth = ((blockSize / averageWriteTime)) * 100;
          // * 1000000;    
         float AbsErrorWrite = abs(writeTime[0] - averageWriteTime);
         float RelErrorWrite = (AbsErrorWrite / averageWriteTime) * 0.1;
@@ -80,7 +79,7 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
         readTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000000));
         totalReadTime += readTime[j];
         float averageReadTime = totalReadTime / (j + 1);
-        float readBandwidth = (blockSize / averageReadTime);
+        float readBandwidth = (blockSize / averageReadTime) * 100;
         // * 1000000;
         float AbsErrorRead = abs(readTime[0] - averageReadTime);
         float RelErrorRead = (AbsErrorRead / averageReadTime) * 0.1;
