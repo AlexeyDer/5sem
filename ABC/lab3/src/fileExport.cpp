@@ -1,14 +1,27 @@
 #include "fileExport.h"
 
 string fileCreate(string memoryType) {
-       const string &filename = memoryType + ".csv";
-       ofstream myFile(filename);
-       myFile << "MemoryType;" << "BlockSize;" << "ElementType;" << "BufferSize;"
-           << "LaunchNum;" << "Timer;" <<  "WriteTime;" << "AverageWriteTime;" << "WriteBandwidth;"
-           << "AbsError   (write);" << "RelError   (write);" << "ReadTime;" << "AverageReadTime;"
-           << "ReadBandwidth;" << "AbsError(read);" << "RelError(read);" << endl;
-       myFile.close();
-       return filename;
+    string filename;
+
+    if (memoryType == "CASH") {
+        ifstream file;
+        file.open("CASH.csv");
+
+        if(file.is_open()) {
+            filename = "CASH.csv";
+            return filename;
+        }
+    } 
+    filename = memoryType + ".csv";
+
+    ofstream myFile(filename);
+    myFile << "MemoryType;" << "BlockSize;" << "ElementType;" << "BufferSize;"
+            << "LaunchNum;" << "Timer;" <<  "WriteTime;" << "AverageWriteTime;" << "WriteBandwidth;"
+            << "AbsError   (write);" << "RelError   (write);" << "ReadTime;" << "AverageReadTime;"
+            << "ReadBandwidth;" << "AbsError(read);" << "RelError(read);" << endl;
+    myFile.close();
+    
+    return filename;
 }
 
 void fileExport(const string &fileName, const string &memoryType, float blockSize,
@@ -17,26 +30,26 @@ void fileExport(const string &fileName, const string &memoryType, float blockSiz
               float AbsErrorWrite,float RelErrorWrite,
               float ReadTime, float AvReadTime,
               float ReadBandwidth, 
-              float AbsErrorRead,float RelErrorRead) {
+              float AbsErrorRead,float RelErrorRead, string type) {
   
     fstream outCSV(fileName, ios_base::app);
 
 
        outCSV << memoryType << ";"
-           << fixed << setprecision(6)  << blockSize << " Mb;"
+           << blockSize  << " " << type << ";"
            << ElementType << ";"
-           << BufferSize << " Byte;"
+           << BufferSize << " Kb;"
            << LaunchNum << ";" << Timer << ";" 
-           << fixed << setprecision(9) <<  WriteTime << " Sec;" 
-           << fixed << setprecision(9) << AvWriteTime << " Sec;" 
-           << fixed << setprecision(9) <<  WriteBandwidth << " Mb/Sec;"
-           << fixed << setprecision(9) << AbsErrorWrite << " Sec;"
-           << fixed << setprecision(9) << RelErrorWrite << "  %;"
-           << fixed << setprecision(9) << ReadTime << " Sec;"
-           << fixed << setprecision(9) << AvReadTime << " Sec;"
-           << fixed << setprecision(9) << ReadBandwidth << " Mb/Sec;"
-           << fixed << setprecision(9) << AbsErrorRead << " Sec ;"
-           << fixed << setprecision(9) <<  RelErrorRead << " % ;" << endl; 
+           << fixed << setprecision(10) <<  WriteTime << " Sec;"  //
+           << AvWriteTime << " Sec;" 
+           <<  WriteBandwidth << " Mb/Sec;"
+           << AbsErrorWrite << " Sec;"
+           << RelErrorWrite << "  %;"
+           << ReadTime << " Sec;"
+           << AvReadTime << " Sec;"
+           << ReadBandwidth << " Mb/Sec;"
+           << AbsErrorRead << " Sec ;"
+           <<  RelErrorRead << " % ;" << endl; 
 
     outCSV.close();
 }

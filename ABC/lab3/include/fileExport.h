@@ -14,6 +14,7 @@ void fileExport(const string &fileName, const string &memoryType, float blockSiz
               float AbsErrorWrite,float RelErrorWrite,
               float ReadTime, float AvReadTime,
               float ReadBandwidth, 
-              float AbsErrorRead,float RelErrorRead);
+              float AbsErrorRead,float RelErrorRead,
+              string type);
 
 #endif

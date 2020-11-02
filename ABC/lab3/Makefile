@@ -5,7 +5,7 @@ BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS :=  –m SSD –b 1024 –l 10 
+ARGS :=  –m L1 –b 4Mb –l 20
 
 LIBRARIES	:=
 EXECUTABLE	:= main
