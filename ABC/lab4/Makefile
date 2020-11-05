@@ -5,7 +5,7 @@ BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS :=  
+ARGS := 
 
 LIBRARIES	:=
 EXECUTABLE	:= main
@@ -18,7 +18,7 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
 endif
 
 all: $(BIN)/$(EXECUTABLE) 
-	$(BIN)/$(EXECUTABLE) $(ARGS) 
+	perf stat -e cache-misses $(BIN)/$(EXECUTABLE) $(ARGS) 
 
 run: clean all
 	clear
