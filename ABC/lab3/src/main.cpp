@@ -70,12 +70,10 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
         }
        
 
-        writeTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000));
-        // cout << fixed << setprecision(9) << writeTime[j] << endl;
-        // printf( "%lf\n", writeTime[j]);
+        writeTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 100000000));
         totalWriteTime += writeTime[j];
         float averageWriteTime = totalWriteTime / (j + 1);
-        float writeBandwidth = blockSize / averageWriteTime;
+        float writeBandwidth = ((BufferSize * sizeof(int) / averageWriteTime) / 1024 / 1024) * 1000;
          // * 1000000;    
         float AbsErrorWrite = abs(writeTime[0] - averageWriteTime);
         float RelErrorWrite = (AbsErrorWrite / averageWriteTime) * 0.1;
@@ -102,10 +100,10 @@ void performanceOfTheMemorySubsystem(string memoryType, string ElementType, floa
         }  
          
 
-        readTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000));
+        readTime[j] = ((((float)mt2.tv_sec - (float)mt1.tv_sec) + ((float)mt2.tv_nsec - (float) mt1.tv_nsec) / 1000000000));
         totalReadTime += readTime[j];
         float averageReadTime = totalReadTime / (j + 1);
-        float readBandwidth = (blockSize / averageReadTime);
+        float readBandwidth = ((BufferSize * sizeof(int) / averageReadTime) / 1024 / 1024) * 100;
         // * 1000000;
         float AbsErrorRead = abs(readTime[0] - averageReadTime);
         float RelErrorRead = (AbsErrorRead / averageReadTime) * 0.1;

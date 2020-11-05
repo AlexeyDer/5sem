@@ -5,7 +5,7 @@ BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS :=  –m L1 –b 4Mb –l 20
+ARGS :=  –m SSD –b 1Kb –l 10
 
 LIBRARIES	:=
 EXECUTABLE	:= main
@@ -28,4 +28,4 @@ $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
 	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o  $@ $(LIBRARIES) -lrt
 
 clean:
-	-rm $(BIN)/*
+	-rm $(BIN)/*	
