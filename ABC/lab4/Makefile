@@ -1,11 +1,12 @@
 CXX		  := g++
-CXX_FLAGS := -Wall -Wextra -lrt
+CXX_FLAGS := -Wall -Wextra -g 
 
 BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS := 
+ARGS := 1024
+# CASH_MISSES_ARG := perf stat -e cache-misses 
 
 LIBRARIES	:=
 EXECUTABLE	:= main
@@ -18,7 +19,7 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
 endif
 
 all: $(BIN)/$(EXECUTABLE) 
-	perf stat -e cache-misses $(BIN)/$(EXECUTABLE) $(ARGS) 
+	$(BIN)/$(EXECUTABLE) $(ARGS) 
 
 run: clean all
 	clear
