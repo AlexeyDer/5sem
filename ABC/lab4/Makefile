@@ -1,11 +1,11 @@
 CXX		  := g++
-CXX_FLAGS := -Wall -Wextra -g 
+CXX_FLAGS := -Wall -Wextra -g -O3
 
 BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS := 1024
+ARGS := 5000
 # CASH_MISSES_ARG := perf stat -e cache-misses 
 
 LIBRARIES	:=

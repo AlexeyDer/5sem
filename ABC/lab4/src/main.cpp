@@ -67,10 +67,13 @@ void DGEMM_opt_1(int N, double **a, double **b, double **c) {
 //         }
 // }
 
+//описание функций
+//  
+
 void DGEMM_opt_2(int n, double *A, double *B, double *C, int bSize) {
     int i, j, k, ik, jk, kk;
 
-    assert(n % bSize == 0);
+    // assert(n % bSize == 0);
 
     for(j = 0; j < n; j++) {
         for(i = 0; i < n; i++) {
