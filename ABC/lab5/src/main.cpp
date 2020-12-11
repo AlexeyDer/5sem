@@ -8,102 +8,120 @@
 // #include <immintrin.h>
 #include <pthread.h>
 #include <omp.h>
+#include <malloc.h>
 #include "tbb/task_scheduler_init.h"
 
 using namespace std;
 using namespace tbb;
 
+void DGEMM(int N, double *a, double *b, double *c, int from, int to) {
+    int r = 0, col = 0;
+    double t = 0;
 
-
-int i, j, tmp, n;
-
-double getRandomDouble() {
-    double min = 0;
-    double max = 500;
-
-    double f = (double) rand() / RAND_MAX;
-    return min + f * (max - min);
-}
-
-// int g = 0;
-
-void DGEMM(int N, double **a, double **b, double **c) {
-        int i, j, k; 
-        for (i = 0; i < N; i++) {
-            for (j = 0; j < N; j++) {
-                for (k = 0; k < N; k++) {
-                    c[i][j] += a[i][k] * b[k][j];
-                }
+    for (int i = from; i < to; i++) {
+        r = i * N;
+        for (int j = 0; j < N; j++) {
+            col = 0;
+            for (int k = 0; k < N; k++) {
+                t += a[r + k] * b[j + col];
+                col += N;
             }
+            c[r + j] = t;
+            t = 0;
         }
-        // cout << g++ << endl;
+    }
 }
 
-void *thread_function( void *arg ) {
-    double **a = new double* [n], **b = new double* [n], **c = new double* [n];
+struct SMatrix
+{   
+    double *a, *b, *c;
+    int from, to, n;
+};
 
-    for (i = 0; i < n; i++) {
-        a[i] = new double[n];
-        b[i] = new double[n];
-        c[i] = new double[n];
-    }
+void *thread_posix( void *arg ) {
+    SMatrix* sMatrix = (struct SMatrix *) arg;
+    double *a = sMatrix->a, *b = sMatrix->b, *c = sMatrix->c;
+    int from = sMatrix->from, to = sMatrix->to, n = sMatrix->n;
 
-    for (i = 0; i < n; i++){
-        for (j = 0; j < n; j++){
-            a[i][j] = getRandomDouble();
-            b[i][j] = getRandomDouble();
-            c[i][j] = 0;
-        }
-    }
+    DGEMM(n, a, b, c, from, to);
 
-    DGEMM(n, a, b, c);
-    
     pthread_exit( NULL );
 }
 
+int n, tmp;
+int count_thread;
 
 int main(int argc, char* argv[]) {
-    
     srand(static_cast <unsigned> (time(nullptr))); 
     struct timespec tv1, tv2;
     n = stoi(argv[1]);
-    int count_thread =  stoi(argv[2]);
-   
+    count_thread =  stoi(argv[2]);
+
+    // from = new int[count_thread], to = new int [count_thread];
+    // a = (double*)malloc(n * n * sizeof(double));
+    // b = (double*)malloc(n * n * sizeof(double));
+    // c = (double*)malloc(n * n * sizeof(double));
+
     double matrix_DGEMM_time;
-    ofstream file;
+    // ofstream file;
+
+    int q = (int)((double)n / (double)count_thread);
+    int step = 0;
+
+    SMatrix sMatrix[count_thread];
+
 
 // ------------POSIX-------------------
-    // pthread_t thread[count_thread];
-    // pthread_attr_t attr;
+    pthread_t thread[count_thread];
+    pthread_attr_t attr;
 
-    // pthread_attr_init(&attr);
-    // pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
     // pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);
 
+    // int num[count_thread];
+    double* a = (double*)malloc(n * n * sizeof(double));
+    double* b = (double*)malloc(n * n * sizeof(double));
+    double* c = (double*)malloc(n * n * sizeof(double));
 
-    // for (i = 0; i < count_thread; i++) {
-    //     tmp = pthread_create( &thread[i], &attr, thread_function, NULL );
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            a[i + j * n] = 1 + rand() % 10;
+            b[i + j * n] = 1 + rand() % 10;
+        }
+    }
+    for (int i = 0; i < count_thread; i++) {
+        sMatrix[i].n = n;
+        sMatrix[i].a = a;
+        sMatrix[i].b = b;
+        sMatrix[i].c = c;
+        sMatrix[i].from = step;
+        step += q;
+        sMatrix[i].to = (i == count_thread - 1) ? n : step;
+       
+        tmp = pthread_create(&thread[i], &attr, thread_posix, (void *) &thread[i]);
 
-    //     if (tmp != 0) {
-    //         cout << "Create thread " << i << " failed!" << endl;
-    //         return 1;
-    //     }
-    // }
+        if (tmp != 0) {
+            cout << "Create thread " << i << " failed!" << endl;
+            return 1;
+        }
+    }
+    pthread_attr_destroy(&attr);
 
-    // clock_gettime(CLOCK_REALTIME, &tv1);
-    // for (i = 0; i < count_thread; i++) {
-    //     tmp = pthread_join(thread[i], NULL);
+    clock_gettime(CLOCK_REALTIME, &tv1);
+    for (int i = 0; i < count_thread; i++) {
+        tmp = pthread_join(thread[i], NULL);
 
-    //     if (tmp != 0) {
-    //         cout << "Joing thread " << i << " failed!" << endl;
-    //         return 1;
-    //     }
-    // }
-    // clock_gettime(CLOCK_REALTIME, &tv2);
+        if (tmp != 0) {
+            cout << "Joing thread " << i << " failed!" << endl;
+            return 1;
+        }
+    }
+    clock_gettime(CLOCK_REALTIME, &tv2);
 
-    // cout << "\nPOSIX" << endl;
-    // matrix_DGEMM_time = ((double)tv2.tv_sec - (double) tv1.tv_sec) + ((double)tv2.tv_nsec - (double)tv1.tv_nsec) / 1000000000;
-    // cout << fixed << setprecision(9) << matrix_DGEMM_time << endl;
+    cout << "\nPOSIX" << endl;
+    matrix_DGEMM_time = ((double)tv2.tv_sec - (double) tv1.tv_sec) + ((double)tv2.tv_nsec - (double)tv1.tv_nsec) / 1000000000;
+    cout << fixed << setprecision(9) << matrix_DGEMM_time << endl;
 
 // -------------OpenMP---------------------
 
@@ -141,34 +159,34 @@ int main(int argc, char* argv[]) {
 
 // -------------Intel TBB----------------------
 
-    task_scheduler_init init;
+    // task_scheduler_init init;
 
-    clock_gettime(CLOCK_REALTIME, &tv1);
-    init.initialize(count_thread);
+    // clock_gettime(CLOCK_REALTIME, &tv1);
+    // init.initialize(count_thread);
     
-     double **a = new double* [n], **b = new double* [n], **c = new double* [n];
+    //  double **a = new double* [n], **b = new double* [n], **c = new double* [n];
 
-        for (i = 0; i < n; i++) {
-            a[i] = new double[n];
-            b[i] = new double[n];
-            c[i] = new double[n];
-        }
+    //     for (i = 0; i < n; i++) {
+    //         a[i] = new double[n];
+    //         b[i] = new double[n];
+    //         c[i] = new double[n];
+    //     }
 
-        for (i = 0; i < n; i++){
-            for (j = 0; j < n; j++){
-                a[i][j] = getRandomDouble();
-                b[i][j] = getRandomDouble();
-                c[i][j] = 0;
-            }
-        }
+    //     for (i = 0; i < n; i++){
+    //         for (j = 0; j < n; j++){
+    //             a[i][j] = getRandomDouble();
+    //             b[i][j] = getRandomDouble();
+    //             c[i][j] = 0;
+    //         }
+    //     }
 
-    DGEMM(n, a, b, c);
-    init.terminate();
-    clock_gettime(CLOCK_REALTIME, &tv2);
+    // DGEMM(n, a, b, c);
+    // init.terminate();
+    // clock_gettime(CLOCK_REALTIME, &tv2);
 
-    cout << "\nIntel TBB" << endl;
-    matrix_DGEMM_time = ((double)tv2.tv_sec - (double) tv1.tv_sec) + ((double)tv2.tv_nsec - (double)tv1.tv_nsec) / 1000000000;
-    cout << fixed << setprecision(9) << matrix_DGEMM_time << endl;
+    // cout << "\nIntel TBB" << endl;
+    // matrix_DGEMM_time = ((double)tv2.tv_sec - (double) tv1.tv_sec) + ((double)tv2.tv_nsec - (double)tv1.tv_nsec) / 1000000000;
+    // cout << fixed << setprecision(9) << matrix_DGEMM_time << endl;
 
 
     // file.open("file.txt", ios_base::app);
