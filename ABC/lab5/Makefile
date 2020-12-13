@@ -1,11 +1,12 @@
 CXX		  := g++
-CXX_FLAGS := -Wall -Wextra -g -pthread -fopenmp -ltbb
+CXX_FLAGS := -Wall -Wextra -g -pthread -fopenmp 
+# -ltbb
 
 BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-ARGS := 5000 10 
+ARGS := 2000 32
 
 LIBRARIES	:=
 EXECUTABLE	:= main
@@ -25,7 +26,7 @@ run: clean all
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp 
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o  $@ $(LIBRARIES) -lrt
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o  $@ $(LIBRARIES) 
 
 clean:
 	-rm $(BIN)/*	
